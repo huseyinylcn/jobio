@@ -169,8 +169,5 @@ if (response.code == '0x202') return res.json({code:"0x202",mess:"successfull"})
 })
 
 
-// fsfsdf
-
-
 
 module.exports = router;
