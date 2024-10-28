@@ -51,11 +51,13 @@ app.use(express.urlencoded({extended:true}))
 const user_process = require("../Router/user-process")
 const user_detail_process = require("../Router/user-detail-process")
 const company_proccess = require("../Router/company_proccess")
+const job_proccess = require('../Router/job_proccess')
 
 sql.connect(config).then(()=>{
   app.use("/user/update/",user_detail_process)
   app.use("/user",user_process)
   app.use("/company",company_proccess)
+  app.use("/job",job_proccess)
 
 }).catch(err=>{
   console.log("Could Not Connect to Database",err)
