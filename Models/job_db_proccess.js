@@ -5,30 +5,34 @@ const job_create = (data)=>{
 return new Promise((resolve,reject)=>{
     let result = new sql.Request()
     result
-    .input("id",sql.NVarChar,data.id)
+    .input("company",sql.NVarChar,data.company)
     .input("admin",sql.NVarChar,data.admin)
     .input("title",sql.NVarChar,data.title)
     .input("price",sql.NVarChar,data.price)
     .input("about",sql.NVarChar,data.about)
     .input("location",sql.NVarChar,data.location)
     .input("type",sql.NVarChar,data.type)
+    .input("id",sql.NVarChar,data.id)
+
     .query(`
         INSERT INTO [dbo].[job_advert]
-           ([id]
+           ([company]
            ,[admin]
            ,[title]
            ,[price]
            ,[about]
            ,[location]
-           ,[type])
+           ,[type]
+           ,[id])
      VALUES
-           (@id
+           (@company
            ,@admin
            ,@title
            ,@price
            ,@about
            ,@location
-           ,@type)
+           ,@type
+           ,@id)
         `).then(response=>{
         resolve({code:"0x202",mess:"successfull"})
     }).catch((err=>{
