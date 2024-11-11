@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const crypto = require("crypto");
 
-const { job_create } = require("../Models/job_db_proccess");
+const { job_create,job_asset_control, job_applicant, job_applicant_assest_control } = require("../Models/job_db_proccess");
 const { company_get } = require("../Models/company-db-process");
 
 router.post("/create", (req, res, next) => {
@@ -72,8 +72,39 @@ router.post("/create", async (req, res, next) => {
 });
 
 
-router.post("/apply",(req,res,next)=>{
+router.post("/apply",async(req,res,next)=>{
+
   if (!req.user) return res.json({ code: "0x114", mess: "oturum kapalı" });
+
+  if (!("job_id" in req.body && "cv" in req.body)) return res.json({ code: "0x145", mess: "gelen veri eksik veya hatalı" });
+
+  let response = await job_asset_control(req.body)
+
+  if (response.code == '0x202') next()
+  else if(response.code == "0x144") return res.json({ code: "0x144", mess: "böyle bir iş bulunamadıı job id yanlış" });
+  else return res.json({code:"0x112",mess:"sql genel fonksiyon hatası"})
   
 })
+
+router.post("/apply",async(req,res,next)=>{
+
+let response = await  job_applicant_assest_control(req.user)
+if (response.code == '0x202') next()
+  else if (response.code == '0x147') return res.json({code:"0x147",mess:"zaten başvuru yapılmış"})
+else if( response.code = '0x148') return res.json({code:"0x148",mess:"control sorgu hatası"})
+  else if(response.code == '0x112') return res.json({code:'0x112',mess:"genel sql func hatası"})
+else return {code:"0x000",mess:"bilinmeyen hata"}
+  })
+
+router.post("/apply",async(req,res,next)=>{
+  req.body.user_id = req.user.id
+let response = await job_applicant(req.body)
+if (response.code == '0x202') return res.json({code:"0x202",mess:"succesfuul"})
+else if (response.code == '0x146') return res.json({code:"0x146",mess:"iş başvurusu yapılamadı "})
+else return res.json({code:"0x112",mess:"sql func genel hata"})
+
+})
+
+
+
 module.exports = router;

@@ -16,14 +16,16 @@ const {
 } = require("../Models/company-db-process");
 const { server_picture_save } = require("../Models/user-db-img-process");
 
+
+
 router.post("/create", async (req, res, next) => {
   try {
     if (!req.user) return res.json({ code: "0x114", mess: "oturum kapalı" });
     let id = crypto.randomBytes(10).toString("hex");
     let response = await company_create(id, req.user.id);
     if (response.code != "0x202")
-      return res.json({ code: "0x127", mess: "company oluşturulamadı" });
-    res.json({ code: "0x202", mess: "successfull" });
+      return res.json({ code: "0x150", mess: "company oluşturulamadı" });
+    res.json({ code: "0x202", mess: "successfull"});
   } catch (error) {
     res.json({ code: "0x105", mess: "genel fonksiyon hatası" });
   }
@@ -106,7 +108,7 @@ router.post("/profilepicture",async(req,res,next)=>{
     req.params.picture_name = crypto.randomBytes(7).toString("hex");
 
     server_picture_save(req,res,err=>{
-      if(err) return res.json({code:"0x131",mess:"company profil fotoğtafı sunucuya kayıt edilemedi"})
+      if(err) return res.json({code:"0x151",mess:"company profil fotoğtafı sunucuya kayıt edilemedi"})
         next()
     })
 })
@@ -125,7 +127,7 @@ router.post("/profilepicture",async(req,res,next)=>{
 let response = await company_db_profile_picture(fullpath,req.query.id)
 
 if (response.code == '0x202') return res.json({code:"0x202",mess:"successfull"})
-  res.json({code:"0x132",mess:"company profile fotoğrafı sunucu kayıt edilemedi"})
+  res.json({code:"0x152",mess:"company profile fotoğrafı sunucu kayıt edilemedi"})
 
 })
 
@@ -145,7 +147,7 @@ router.post("/bannerpicture",async(req,res,next)=>{
     req.params.picture_name = crypto.randomBytes(7).toString("hex");
 
     server_picture_save(req,res,err=>{
-      if(err) return res.json({code:"0x133",mess:"company kapak fotoğtafı sunucuya kayıt edilemedi"})
+      if(err) return res.json({code:"0x153",mess:"company kapak fotoğtafı sunucuya kayıt edilemedi"})
         next()
     })
 })
@@ -164,7 +166,7 @@ router.post("/bannerpicture",async(req,res,next)=>{
 let response = await company_db_banner_picture(fullpath,req.query.id)
 
 if (response.code == '0x202') return res.json({code:"0x202",mess:"successfull"})
-  res.json({code:"0x134",mess:"company kapak fotoğrafı sunucu kayıt edilemedi"})
+  res.json({code:"0x154",mess:"company kapak fotoğrafı sunucu kayıt edilemedi"})
 
 })
 
